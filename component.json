@@ -8,5 +8,5 @@
     "component/find": "*",
     "component/event": "*"
   },
-  "scripts": ["index.js"]
+  "scripts": ["autosuggest.js"]
 }
