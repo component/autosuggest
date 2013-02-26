@@ -1,0 +1,15 @@
+{
+  "name": "autosuggest",
+  "description": "",
+  "keywords": [],
+  "version": "0.0.1",
+  "dependencies": {
+    "bind-component": "*",
+    "event-component": "*"
+  },
+  "component": {
+    "scripts": {
+      "autosuggest/index.js": "autosuggest.js"
+    }
+  }
+}
