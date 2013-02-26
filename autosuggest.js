@@ -30,6 +30,7 @@ function Autosuggest (el, suggestions) {
 
   // bind event listeners
   this.oninput = bind(this, this.oninput);
+  this.onkeydown = bind(this, this.onkeydown);
   this.bind();
 }
 
@@ -63,6 +64,7 @@ Autosuggest.prototype.set = function (v) {
 
 Autosuggest.prototype.bind = function () {
   events.bind(this.el, 'input', this.oninput);
+  events.bind(this.el, 'keydown', this.onkeydown);
 };
 
 /**
@@ -73,6 +75,21 @@ Autosuggest.prototype.bind = function () {
 
 Autosuggest.prototype.unbind = function () {
   events.unbind(this.el, 'input', this.oninput);
+  events.unbind(this.el, 'keydown', this.onkeydown);
+};
+
+/**
+ * Called for the <input> DOM element's `"keydown"` event.
+ * Checks if the key is one of the blacklisted keys which we should *not*
+ * autosuggest when the input value changes.
+ *
+ * @param {Event} e
+ * @api private
+ */
+
+Autosuggest.prototype.onkeydown = function (e) {
+  var code = e.keyCode;
+  this.ignore = 8 == code; // ignore backspace
 };
 
 /**
@@ -83,7 +100,9 @@ Autosuggest.prototype.unbind = function () {
  * @api private
  */
 
-Autosuggest.prototype.oninput = function (e) {
+Autosuggest.prototype.oninput = function () {
+  if (this.ignore) return; // user is pressing a key that we don't want to react
+
   var suggestions = this.get();
   if (!suggestions || 0 == suggestions.length) return; // nothing to do...
 
