@@ -1,1 +1,27 @@
-My Page
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Autosuggest Component Test</title>
+    <script type="text/javascript" src="build/build.js"></script>
+  </head>
+  <body>
+    <p>Type the days of the week into the input!</p>
+    <p>
+      <input type="text" id="daysOfWeek" />
+    </p>
+    <script type="text/javascript">
+      var autosuggest = require('autosuggest');
+
+      var input = document.getElementById('daysOfWeek');
+      var suggest = autosuggest(input, [
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday'
+      ]);
+    </script>
+  </body>
+</html>
