@@ -2,7 +2,7 @@
   "name": "autosuggest",
   "description": "Autosuggest values for text inputs",
   "keywords": [],
-  "version": "0.0.1",
+  "version": "0.0.2",
   "dependencies": {
     "bind-component": "*",
     "event-component": "*",
