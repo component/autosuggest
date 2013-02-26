@@ -103,13 +103,13 @@ Autosuggest.prototype.onkeydown = function (e) {
 Autosuggest.prototype.oninput = function () {
   if (this.ignore) return; // user is pressing a key that we don't want to react
 
-  var suggestions = this.get();
-  if (!suggestions || 0 == suggestions.length) return; // nothing to do...
-
   // get current string value
   var value = this.el.value;
 
   if (0 == value.length) return; // don't suggest if there's nothing there
+
+  var suggestions = this.get();
+  if (!suggestions || 0 == suggestions.length) return; // nothing to do...
 
   // attempt to find a suggestion
   var suggestion = this.suggestion(value, suggestions);
@@ -119,21 +119,29 @@ Autosuggest.prototype.oninput = function () {
   this.el.value = suggestion;
 
   // select the "suggested" text portion
+  var self = this;
   var start = value.length;
   var length = suggestion.length;
-  if (this.el.createTextRange) {
-    // use text ranges for Internet Explorer
-    var oRange = this.el.createTextRange();
-    oRange.moveStart('character', start);
-    oRange.moveEnd('character', length - this.el.value.length);
-    oRange.select();
-  } else if (this.el.setSelectionRange) {
-    // use setSelectionRange() for Mozilla/WebKit
-    this.el.setSelectionRange(start, length);
-  }
 
-  // set focus back to the el
-  this.el.focus();
+  // selecting the text needs to happen in a new tick... :(
+  // https://code.google.com/p/chromium/issues/detail?id=32865
+  // http://stackoverflow.com/questions/11723420/chrome-setselectionrange-not-work-in-oninput-handler
+  clearTimeout(this._timeout);
+  this._timeout = setTimeout(function(){
+    if (self.el.createTextRange) {
+      // use text ranges for Internet Explorer
+      var range = self.el.createTextRange();
+      range.moveStart('character', start);
+      range.moveEnd('character', length - self.el.value.length);
+      range.select();
+    } else if (self.el.setSelectionRange) {
+      // use setSelectionRange() for Mozilla/WebKit
+      self.el.setSelectionRange(start, length);
+    }
+
+    // set focus back to the el
+    self.el.focus();
+  }, 0);
 };
 
 /**
