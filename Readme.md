@@ -3,7 +3,7 @@
 
 `<input type="text">` autosuggest component.
 
-Based on http://oak.cs.ucla.edu/cs144/projects/javascript/suggest1.html
+Inspired from http://oak.cs.ucla.edu/cs144/projects/javascript/suggest1.html.
 
 ## Installation
 
@@ -33,7 +33,7 @@ var suggest = autosuggest(input, suggestions);
 
 // and you can change the array of suggestions to use if they get change
 var newSuggestions = suggestions.concat([ 'Funday' ]);
-suggest.set(suggestions);
+suggest.set(newSuggestions);
 ```
 
 ## API
