@@ -3,7 +3,7 @@
 
 ### Autosuggest values for text inputs
 
-`<input type="text">` autosuggest component.
+`<input type="text">` autosuggest component. [Try the demo][demo]!
 
 Inspired from http://oak.cs.ucla.edu/cs144/projects/javascript/suggest1.html.
 
@@ -53,3 +53,5 @@ Stops the autosuggesting.
 ## License
 
   MIT
+
+[demo]: http://component.github.com/autosuggest/
