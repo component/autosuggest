@@ -1,6 +1,8 @@
 
 # autosuggest
 
+### Autosuggest values for text inputs
+
 `<input type="text">` autosuggest component.
 
 Inspired from http://oak.cs.ucla.edu/cs144/projects/javascript/suggest1.html.

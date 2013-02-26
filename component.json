@@ -1,6 +1,6 @@
 {
   "name": "autosuggest",
-  "description": "",
+  "description": "Autosuggest values for text inputs",
   "version": "0.0.1",
   "keywords": [],
   "dependencies": {
