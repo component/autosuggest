@@ -58,7 +58,7 @@ Autosuggest.prototype.set = function (v) {
 /**
  * Binds the event listeners to the <input> DOM element.
  *
- * @api private
+ * @api public
  */
 
 Autosuggest.prototype.bind = function () {
@@ -68,7 +68,7 @@ Autosuggest.prototype.bind = function () {
 /**
  * Unbinds the event listers from the <input> DOM element.
  *
- * @api private
+ * @api public
  */
 
 Autosuggest.prototype.unbind = function () {
