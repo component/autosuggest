@@ -8,6 +8,7 @@
     "component/find": "*",
     "component/event": "*"
   },
+  "license": "MIT",
   "main": "autosuggest.js",
   "scripts": ["autosuggest.js"]
 }
