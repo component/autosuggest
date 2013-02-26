@@ -89,26 +89,28 @@ Autosuggest.prototype.oninput = function (e) {
 
   // get current string value
   var value = this.el.value;
-  var iLen = value.length;
+
+  if (0 == value.length) return; // don't suggest if there's nothing there
 
   // attempt to find a suggestion
-  var sSuggestion = this.suggestion(value, suggestions);
-  if (null == sSuggestion) return; // got nothing...
+  var suggestion = this.suggestion(value, suggestions);
+  if (null == suggestion) return; // got nothing...
 
-  this.el.value = sSuggestion;
+  // we got a suggestion, set it as the input's new value
+  this.el.value = suggestion;
 
   // select the "suggested" text portion
-  var iStart = iLen;
-  var iLength = sSuggestion.length;
+  var start = value.length;
+  var length = suggestion.length;
   if (this.el.createTextRange) {
     // use text ranges for Internet Explorer
     var oRange = this.el.createTextRange();
-    oRange.moveStart('character', iStart);
-    oRange.moveEnd('character', iLength - this.el.value.length);
+    oRange.moveStart('character', start);
+    oRange.moveEnd('character', length - this.el.value.length);
     oRange.select();
   } else if (this.el.setSelectionRange) {
     // use setSelectionRange() for Mozilla/WebKit
-    this.el.setSelectionRange(iStart, iLength);
+    this.el.setSelectionRange(start, length);
   }
 
   // set focus back to the el
