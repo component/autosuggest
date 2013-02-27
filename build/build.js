@@ -457,6 +457,7 @@ function Autosuggest (el, suggestions) {
 
   // bind event listeners
   this.oninput = bind(this, this.oninput);
+  this.onkeydown = bind(this, this.onkeydown);
   this.bind();
 }
 
@@ -485,21 +486,37 @@ Autosuggest.prototype.set = function (v) {
 /**
  * Binds the event listeners to the <input> DOM element.
  *
- * @api private
+ * @api public
  */
 
 Autosuggest.prototype.bind = function () {
   events.bind(this.el, 'input', this.oninput);
+  events.bind(this.el, 'keydown', this.onkeydown);
 };
 
 /**
  * Unbinds the event listers from the <input> DOM element.
  *
- * @api private
+ * @api public
  */
 
 Autosuggest.prototype.unbind = function () {
   events.unbind(this.el, 'input', this.oninput);
+  events.unbind(this.el, 'keydown', this.onkeydown);
+};
+
+/**
+ * Called for the <input> DOM element's `"keydown"` event.
+ * Checks if the key is one of the blacklisted keys which we should *not*
+ * autosuggest when the input value changes.
+ *
+ * @param {Event} e
+ * @api private
+ */
+
+Autosuggest.prototype.onkeydown = function (e) {
+  var code = e.keyCode;
+  this.ignore = 8 == code; // ignore backspace
 };
 
 /**
@@ -510,36 +527,48 @@ Autosuggest.prototype.unbind = function () {
  * @api private
  */
 
-Autosuggest.prototype.oninput = function (e) {
-  var suggestions = this.get();
-  if (!suggestions || 0 == suggestions.length) return; // nothing to do...
+Autosuggest.prototype.oninput = function () {
+  if (this.ignore) return; // user is pressing a key that we don't want to react
 
   // get current string value
   var value = this.el.value;
-  var iLen = value.length;
+
+  if (0 == value.length) return; // don't suggest if there's nothing there
+
+  var suggestions = this.get();
+  if (!suggestions || 0 == suggestions.length) return; // nothing to do...
 
   // attempt to find a suggestion
-  var sSuggestion = this.suggestion(value, suggestions);
-  if (null == sSuggestion) return; // got nothing...
+  var suggestion = this.suggestion(value, suggestions);
+  if (null == suggestion) return; // got nothing...
 
-  this.el.value = sSuggestion;
+  // we got a suggestion, set it as the input's new value
+  this.el.value = suggestion;
 
   // select the "suggested" text portion
-  var iStart = iLen;
-  var iLength = sSuggestion.length;
-  if (this.el.createTextRange) {
-    // use text ranges for Internet Explorer
-    var oRange = this.el.createTextRange();
-    oRange.moveStart('character', iStart);
-    oRange.moveEnd('character', iLength - this.el.value.length);
-    oRange.select();
-  } else if (this.el.setSelectionRange) {
-    // use setSelectionRange() for Mozilla/WebKit
-    this.el.setSelectionRange(iStart, iLength);
-  }
+  var self = this;
+  var start = value.length;
+  var length = suggestion.length;
 
-  // set focus back to the el
-  this.el.focus();
+  // selecting the text needs to happen in a new tick... :(
+  // https://code.google.com/p/chromium/issues/detail?id=32865
+  // http://stackoverflow.com/questions/11723420/chrome-setselectionrange-not-work-in-oninput-handler
+  clearTimeout(this._timeout);
+  this._timeout = setTimeout(function(){
+    if (self.el.createTextRange) {
+      // use text ranges for Internet Explorer
+      var range = self.el.createTextRange();
+      range.moveStart('character', start);
+      range.moveEnd('character', length - self.el.value.length);
+      range.select();
+    } else if (self.el.setSelectionRange) {
+      // use setSelectionRange() for Mozilla/WebKit
+      self.el.setSelectionRange(start, length);
+    }
+
+    // set focus back to the el
+    self.el.focus();
+  }, 0);
 };
 
 /**
