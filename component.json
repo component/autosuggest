@@ -6,7 +6,8 @@
   "dependencies": {
     "component/bind": "*",
     "component/find": "*",
-    "component/event": "*"
+    "component/event": "*",
+    "stagas/select": "*"
   },
   "license": "MIT",
   "main": "autosuggest.js",

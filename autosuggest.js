@@ -6,6 +6,7 @@
 var bind = require('bind');
 var find = require('find');
 var events = require('event');
+var select = require('select');
 
 /**
  * Module exports.
@@ -103,8 +104,11 @@ Autosuggest.prototype.onkeydown = function (e) {
 Autosuggest.prototype.oninput = function () {
   if (this.ignore) return; // user is pressing a key that we don't want to react
 
+  // reference to input el
+  var input = this.el;
+
   // get current string value
-  var value = this.el.value;
+  var value = input.value;
 
   if (0 == value.length) return; // don't suggest if there's nothing there
 
@@ -112,36 +116,18 @@ Autosuggest.prototype.oninput = function () {
   if (!suggestions || 0 == suggestions.length) return; // nothing to do...
 
   // attempt to find a suggestion
-  var suggestion = this.suggestion(value, suggestions);
+  var suggestion = this.suggest(value, suggestions);
   if (null == suggestion) return; // got nothing...
 
   // we got a suggestion, set it as the input's new value
-  this.el.value = suggestion;
+  input.value = suggestion;
+
+  // determine selection range
+  var start = value.length;
+  var end = suggestion.length;
 
   // select the "suggested" text portion
-  var self = this;
-  var start = value.length;
-  var length = suggestion.length;
-
-  // selecting the text needs to happen in a new tick... :(
-  // https://code.google.com/p/chromium/issues/detail?id=32865
-  // http://stackoverflow.com/questions/11723420/chrome-setselectionrange-not-work-in-oninput-handler
-  clearTimeout(this._timeout);
-  this._timeout = setTimeout(function(){
-    if (self.el.createTextRange) {
-      // use text ranges for Internet Explorer
-      var range = self.el.createTextRange();
-      range.moveStart('character', start);
-      range.moveEnd('character', length - self.el.value.length);
-      range.select();
-    } else if (self.el.setSelectionRange) {
-      // use setSelectionRange() for Mozilla/WebKit
-      self.el.setSelectionRange(start, length);
-    }
-
-    // set focus back to the el
-    self.el.focus();
-  }, 0);
+  select(input, start, end);
 };
 
 /**
@@ -151,7 +137,7 @@ Autosuggest.prototype.oninput = function () {
  * @api private
  */
 
-Autosuggest.prototype.suggestion = function (value, suggestions) {
+Autosuggest.prototype.suggest = function (value, suggestions) {
   var val = value.toLowerCase();
   return find(suggestions, function (suggestion) {
     return suggestion.toLowerCase().substring(0, val.length) == val;
