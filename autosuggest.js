@@ -89,7 +89,7 @@ Autosuggest.prototype.unbind = function () {
 
 Autosuggest.prototype.onkeydown = function (e) {
   var code = e.keyCode;
-  this.ignore = 8 == code; // ignore backspace
+  this.ignore = 8 == code || 46 == code; // ignore del & backspace
 };
 
 /**
