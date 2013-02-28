@@ -127,7 +127,14 @@ Autosuggest.prototype.oninput = function () {
   var end = suggestion.length;
 
   // select the "suggested" text portion
-  select(input, start, end);
+
+  // selecting the text needs to happen in a new tick... :(
+  // because we are in the "oninput" event
+  // https://code.google.com/p/chromium/issues/detail?id=32865
+  // http://stackoverflow.com/questions/11723420/chrome-setselectionrange-not-work-in-oninput-handler
+  setTimeout(function () {
+    select(input, start, end);
+  }, 0);
 };
 
 /**
