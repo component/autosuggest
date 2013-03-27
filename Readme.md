@@ -46,9 +46,18 @@ Returns an `Autosuggest` instance. The instance has `.start()` called on it if t
 optional `suggestions` array is given, otherwise you must call `.set(array)` and
 `.start()` manually.
 
+### .set(array)
+
+Sets a new array of Strings to use as the suggestions for the `Autosuggest`
+instance.
+
+#### .start()
+
+Starts the autosuggesting for the `Autosuggest` instance.
+
 #### .stop()
 
-Stops the autosuggesting.
+Stops the autosuggesting for the `Autosuggest` instance..
 
 ## License
 
