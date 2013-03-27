@@ -2,11 +2,12 @@
   "name": "autosuggest",
   "description": "Autosuggest values for text inputs",
   "keywords": [],
-  "version": "0.0.2",
+  "version": "0.0.3",
   "dependencies": {
     "bind-component": "*",
     "event-component": "*",
-    "find": "component/find"
+    "find": "component/find",
+    "select": "stagas/select"
   },
   "component": {
     "scripts": {
