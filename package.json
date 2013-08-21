@@ -13,5 +13,9 @@
     "scripts": {
       "autosuggest/index.js": "autosuggest.js"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/component/autosuggest.git"
   }
 }
